@@ -1,0 +1,235 @@
+.section {
+  width: 100%;
+  padding: 80px 10%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  background-color: var(--color-gray-100);
+  border-top: var(--border-1);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.tagline {
+  font-size: var(--fs-11_1);
+  letter-spacing: var(--ls-3_6);
+  line-height: var(--lh-16);
+  text-transform: uppercase;
+  color: var(--color-darkkhaki-100);
+  font-weight: bold;
+}
+
+.title {
+  margin: 0;
+  font-size: 36px;
+  font-family: var(--font-montaga);
+  color: var(--color-white);
+  text-align: center;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.highlight {
+  color: var(--color-darkkhaki-100);
+}
+
+.divider {
+  width: 60px;
+  height: 1px;
+  background-color: var(--color-darkkhaki-600);
+}
+
+.tabsContainer {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  flex-wrap: wrap;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+  padding-bottom: 8px;
+  width: 100%;
+  max-width: 650px;
+}
+
+.tab {
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 8px 12px;
+  color: var(--color-burlywood-700);
+  font-size: var(--fs-12);
+  letter-spacing: var(--ls-1_8);
+  text-transform: uppercase;
+  font-family: var(--font-inter);
+  font-weight: 500;
+  position: relative;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.tab:focus, .tab:active, .tab:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.tab:hover {
+  color: var(--color-darkkhaki-100);
+}
+
+.tab::after {
+  content: "";
+  position: absolute;
+  bottom: -9px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-darkkhaki-100);
+  transform: scaleX(0);
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.activeTab {
+  color: var(--color-darkkhaki-100);
+  font-weight: bold;
+}
+
+.activeTab::after {
+  transform: scaleX(1);
+}
+
+.poemCard {
+  width: 100%;
+  max-width: 650px;
+  background-color: var(--color-gray-200);
+  border: var(--border-2);
+  border-radius: 12px;
+  padding: 56px 48px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 0 40px rgba(201, 168, 76, 0.05);
+  animation: fadeIn 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  position: relative;
+}
+
+.poemCard::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  border: 1px solid rgba(201, 168, 76, 0.15);
+  pointer-events: none;
+  border-radius: 8px;
+}
+
+.poemTitle {
+  margin: 10px 0 24px 0;
+  font-size: 26px;
+  font-family: var(--font-montaga);
+  color: var(--color-darkkhaki-100);
+  letter-spacing: 0.5px;
+  font-weight: 500;
+  z-index: 2;
+}
+
+.poemBody {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+}
+
+.italicIntro {
+  font-style: italic;
+  font-family: var(--font-inria-serif);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-burlywood-100);
+  margin: 0 auto 24px auto;
+  white-space: pre-line;
+  max-width: 480px;
+  text-align: left;
+  width: fit-content;
+}
+
+.poemText {
+  font-family: var(--font-inria-serif);
+  font-size: 17px;
+  line-height: 1.8;
+  color: var(--color-white);
+  margin: 0 auto;
+  white-space: pre-line;
+  max-width: 480px;
+  text-align: left;
+  width: fit-content;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 60px 5%;
+    gap: 30px;
+  }
+
+  .title {
+    font-size: 30px;
+  }
+
+  .tabsContainer {
+    gap: 16px;
+    padding-bottom: 6px;
+  }
+
+  .tab {
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+
+  .tab::after {
+    bottom: -7px;
+  }
+
+  .poemCard {
+    padding: 36px 24px;
+    border-radius: 8px;
+  }
+
+  .poemCard::before {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border-radius: 6px;
+  }
+
+  .poemTitle {
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+
+  .poemText,
+  .italicIntro {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+}

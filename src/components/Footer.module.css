@@ -1,0 +1,143 @@
+.footer {
+  width: 100%;
+  background-color: var(--color-gray-300);
+  border-top: var(--border-2);
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  padding: 40px 10%;
+  font-family: var(--font-inter);
+}
+
+.footerContainer {
+  max-width: 1200px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.brandSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.theRootedSoul {
+  font-size: 20px;
+  letter-spacing: var(--ls-2);
+  line-height: var(--lh-28);
+  color: var(--color-darkkhaki-100);
+  font-family: var(--font-montaga);
+  font-style: italic;
+}
+
+.aPoetryCollection {
+  font-size: var(--fs-12);
+  color: var(--color-burlywood-300);
+  letter-spacing: 1.2px;
+  line-height: var(--lh-20);
+}
+
+.navSection {
+  display: flex;
+  align-items: center;
+}
+
+.journeyAbout {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+.linkJourney,
+.linkPoems,
+.linkAbout,
+.linkReviews,
+.linkEnquiries,
+.linkBuy {
+  font-size: var(--fs-12);
+  letter-spacing: var(--ls-1_8);
+  line-height: var(--lh-16);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--color-burlywood-200);
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.linkJourney:hover,
+.linkPoems:hover,
+.linkAbout:hover,
+.linkReviews:hover,
+.linkEnquiries:hover,
+.linkBuy:hover {
+  color: var(--color-darkkhaki-100);
+  transform: translateY(-2px);
+}
+
+.socialSection {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.socialLink {
+  color: var(--color-burlywood-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--color-darkkhaki-600);
+  background-color: transparent;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.socialLink:hover {
+  color: var(--color-darkkhaki-100);
+  border-color: var(--color-darkkhaki-100);
+  background-color: var(--color-darkkhaki-500);
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: 0 4px 10px rgba(201, 168, 76, 0.15);
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 30px 5%;
+  }
+
+  .footerContainer {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .brandSection {
+    align-items: center;
+  }
+
+  .journeyAbout {
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .socialSection {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .journeyAbout {
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+}

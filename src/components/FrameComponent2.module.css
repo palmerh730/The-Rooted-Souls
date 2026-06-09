@@ -1,0 +1,304 @@
+.sectionWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 80px 10%;
+  box-sizing: border-box;
+  text-align: left;
+  font-size: var(--fs-11_1);
+  color: var(--color-darkkhaki-800);
+  font-family: var(--font-inter);
+  background-color: var(--color-gray-100);
+}
+
+.section {
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 80px;
+}
+
+.borderParent {
+  position: relative;
+  width: 440px;
+  height: 529px;
+  flex-shrink: 0;
+}
+
+.border,
+.border2 {
+  position: absolute;
+  border: 1px solid var(--color-darkkhaki-600);
+  box-sizing: border-box;
+}
+
+.border {
+  top: 40px;
+  left: 40px;
+  width: 400px;
+  height: 489px;
+  z-index: 1;
+}
+
+.borderGroup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 400px;
+  height: 489px;
+  z-index: 2;
+}
+
+.border2 {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.overlayblurParent {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 398px;
+  height: 487px;
+  overflow: hidden;
+}
+
+.overlayblur {
+  position: absolute;
+  top: 169.1px;
+  left: -130px;
+  filter: blur(80px);
+  border-radius: var(--br-9999);
+  background-color: var(--color-darkkhaki-1000);
+  width: 660px;
+  height: 506.6px;
+}
+
+.alanMcdonaldAuthorOfTheR {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  transition: transform 0.5s ease;
+}
+
+.alanMcdonaldAuthorOfTheR:hover {
+  transform: scale(1.03);
+}
+
+.sectionInner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.frameParent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-24);
+  max-width: 600px;
+}
+
+.theAuthorParent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-12);
+}
+
+.theAuthor {
+  letter-spacing: var(--ls-3_6);
+  line-height: var(--lh-16);
+  text-transform: uppercase;
+  font-size: var(--fs-11_1);
+  color: var(--color-darkkhaki-100);
+  font-weight: bold;
+}
+
+.heading2MeetAlanMcdonaldParent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-16);
+  font-size: 45.2px;
+  color: var(--color-white);
+  font-family: var(--font-montaga);
+}
+
+.heading2Container {
+  font-size: 45px;
+  line-height: 1.1;
+}
+
+.mcdonald {
+  color: var(--color-darkkhaki-100);
+}
+
+.horizontalDivider {
+  height: var(--height-1);
+  width: 80px;
+  background-color: var(--color-darkkhaki-600);
+}
+
+.alanWritesFrom {
+  font-size: var(--fs-14_9);
+  line-height: var(--lh-26);
+  color: var(--color-darkkhaki-900);
+  font-family: var(--font-inter);
+}
+
+.hisWorkReflectsTheRealityWrapper {
+  font-size: var(--fs-17_3);
+  color: var(--color-burlywood-600);
+}
+
+.hisWorkReflects {
+  line-height: var(--lh-28);
+  font-style: italic;
+}
+
+.paragraphverticalborderWrapper {
+  border-left: 3px solid var(--color-darkkhaki-100);
+  padding: 5px 0 5px 20px;
+  font-size: var(--fs-14_9);
+  color: var(--color-darkkhaki-900);
+  font-family: var(--font-inter);
+}
+
+.paragraphverticalborder {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.theDownslopeOf {
+  line-height: var(--lh-26);
+  font-style: italic;
+  display: block;
+}
+
+.alanMcdonald {
+  font-size: var(--fs-13_2);
+  color: var(--color-darkkhaki-100);
+  font-weight: bold;
+}
+
+.link {
+  cursor: pointer;
+  border: 0;
+  padding: 0 32px;
+  background-color: var(--color-darkkhaki-100);
+  height: 50px;
+  width: fit-content;
+  border-radius: var(--br-9999);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.link:hover {
+  background-color: var(--color-burlywood-100);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 6px 15px rgba(201, 168, 76, 0.3);
+}
+
+.getTheBook {
+  font-size: 13.7px;
+  letter-spacing: var(--ls-2_1);
+  text-transform: uppercase;
+  font-family: var(--font-inter);
+  color: var(--color-gray-100);
+  font-weight: bold;
+}
+
+@media (max-width: 1024px) {
+  .sectionWrapper {
+    padding: 60px 5%;
+  }
+  .section {
+    gap: 40px;
+  }
+  .borderParent {
+    width: 330px;
+    height: 400px;
+  }
+  .border {
+    top: 20px;
+    left: 20px;
+    width: 300px;
+    height: 360px;
+  }
+  .borderGroup {
+    width: 300px;
+    height: 360px;
+  }
+  .overlayblurParent {
+    width: 298px;
+    height: 358px;
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    flex-direction: column;
+    gap: 50px;
+  }
+  .sectionInner {
+    width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+  .frameParent {
+    align-items: center;
+    text-align: center;
+  }
+  .theAuthorParent {
+    align-items: center;
+  }
+  .heading2MeetAlanMcdonaldParent {
+    align-items: center;
+  }
+  .paragraphverticalborderWrapper {
+    border-left: 0;
+    border-top: 2px solid var(--color-darkkhaki-100);
+    border-bottom: 2px solid var(--color-darkkhaki-100);
+    padding: 15px 0;
+  }
+  .link {
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .borderParent {
+    width: 260px;
+    height: 310px;
+  }
+  .border {
+    top: 15px;
+    left: 15px;
+    width: 230px;
+    height: 280px;
+  }
+  .borderGroup {
+    width: 230px;
+    height: 280px;
+  }
+  .overlayblurParent {
+    width: 228px;
+    height: 278px;
+  }
+  .heading2Container {
+    font-size: 36px;
+  }
+  .link {
+    width: 100%;
+  }
+}

@@ -1,0 +1,294 @@
+.section {
+  width: 100%;
+  padding: 80px 10%;
+  background-color: var(--color-gray-100);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  gap: var(--gap-80);
+  text-align: center;
+  font-family: var(--font-inter);
+}
+
+.titleContainerWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.titleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-16);
+  max-width: 600px;
+}
+
+.theStructureWrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.theStructure {
+  font-size: var(--fs-11_1);
+  letter-spacing: var(--ls-3_6);
+  line-height: var(--lh-16);
+  text-transform: uppercase;
+  color: var(--color-darkkhaki-100);
+  font-weight: bold;
+}
+
+.heading2AJourneyInFiveWrapper {
+  display: flex;
+  justify-content: center;
+  color: var(--color-white);
+  font-family: var(--font-montaga);
+}
+
+.heading2Container {
+  margin: 0;
+  font-size: 40px;
+  line-height: 1.2;
+  font-weight: 400;
+}
+
+.fivePhases {
+  color: var(--color-darkkhaki-100);
+}
+
+.structureDivider {
+  display: flex;
+  justify-content: center;
+  width: 80px;
+}
+
+.horizontalDivider {
+  height: var(--height-1);
+  width: 100%;
+  background-color: var(--color-darkkhaki-600);
+}
+
+.phaseContainers {
+  width: 100%;
+  max-width: 1300px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  font-size: var(--fs-30);
+  color: var(--color-darkkhaki-100);
+}
+
+.backgroundborder,
+.backgroundborder2,
+.backgroundborder3,
+.backgroundborder4,
+.paragraphbackgroundborder {
+  flex: 1;
+  min-width: 220px;
+  max-width: 240px;
+  height: 260px;
+  border-radius: var(--br-16);
+  background-color: var(--color-gray-200);
+  border: var(--border-2);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 20px;
+  position: relative;
+  gap: 20px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  align-items: center;
+  text-align: center;
+}
+
+.backgroundborder:hover,
+.backgroundborder2:hover,
+.backgroundborder3:hover,
+.backgroundborder4:hover,
+.paragraphbackgroundborder:hover {
+  transform: translateY(-8px);
+  border-color: var(--color-darkkhaki-100);
+  background-color: rgba(26, 14, 0, 0.8);
+  box-shadow: 0 10px 25px rgba(201, 168, 76, 0.15);
+}
+
+.parent,
+.backgroundborderInner,
+.group,
+.container,
+.parent2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 60px;
+}
+
+.h2,
+.h22,
+.h23 {
+  margin: 0;
+  font-size: var(--fs-30);
+  line-height: 1;
+  font-weight: 400;
+  color: var(--color-darkkhaki-100);
+}
+
+.iWrapper,
+.iiiWrapper,
+.ivWrapper,
+.romanFive {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  font-size: var(--fs-36);
+  color: var(--color-darkkhaki-400);
+  font-family: var(--font-inria-serif);
+}
+
+.i,
+.iii,
+.iv,
+.v {
+  margin: 0;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.infoContainers,
+.backgroundborderChild,
+.outerPhaseContainers,
+.frameDiv,
+.phaseVWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  font-size: var(--fs-11_6);
+  color: var(--color-darkkhaki-900);
+}
+
+.phaseLabelsParent,
+.frameGroup,
+.pointLabels,
+.frameContainer,
+.heading3TheAwakeningParent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.phaseLabels,
+.phaseIiWrapper,
+.phaseIvWrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.phaseI,
+.phaseIi,
+.phaseIii,
+.phaseIv,
+.phaseV {
+  letter-spacing: var(--ls-2_4);
+  line-height: var(--lh-16);
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.echoesLabels,
+.turningLabels,
+.ascentLabel,
+.paragraphbackgroundborderInner {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.heading3,
+.heading32,
+.heading33,
+.heading34,
+.heading35 {
+  font-size: 18px;
+  line-height: 1.3;
+  font-family: var(--font-montaga);
+  color: var(--color-white);
+  margin: 0;
+}
+
+.whereStruggleTakes,
+.memoriesGriefAnd,
+.awarenessAndChange,
+.growthAndRebuilding,
+.joyPeaceAnd {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--color-burlywood-500);
+  text-align: center;
+}
+
+.frameParent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+}
+
+.frameChild {
+  display: none; /* Removed absolute decoration line to allow wrapping layout */
+}
+
+.ii {
+  margin: 0;
+  font-size: inherit;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.horizontalDivider2 {
+  display: none; /* Hide absolute connectors for flexible grid flow */
+}
+
+@media (max-width: 1024px) {
+  .section {
+    padding: 60px 5%;
+    gap: 40px;
+  }
+  .phaseContainers {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .heading2Container {
+    font-size: 32px;
+  }
+  .phaseContainers {
+    justify-content: center;
+  }
+  .backgroundborder,
+  .backgroundborder2,
+  .backgroundborder3,
+  .backgroundborder4,
+  .paragraphbackgroundborder {
+    max-width: 100%;
+    width: calc(50% - 12px);
+    min-width: 240px;
+  }
+}
+
+@media (max-width: 550px) {
+  .backgroundborder,
+  .backgroundborder2,
+  .backgroundborder3,
+  .backgroundborder4,
+  .paragraphbackgroundborder {
+    width: 100%;
+    max-width: 100%;
+  }
+}

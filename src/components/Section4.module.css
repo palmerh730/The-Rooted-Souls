@@ -1,0 +1,193 @@
+.section {
+  width: 100%;
+  padding: 80px 10%;
+  background-color: var(--color-gray-200);
+  border-top: var(--border-1);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-40);
+  text-align: center;
+  font-family: var(--font-inter);
+}
+
+.sectionInner {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.frameParent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-16);
+  max-width: 600px;
+}
+
+.stayConnectedWrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.stayConnected {
+  letter-spacing: var(--ls-3_6);
+  line-height: var(--lh-16);
+  text-transform: uppercase;
+  font-size: var(--fs-11_1);
+  color: var(--color-darkkhaki-100);
+  font-weight: bold;
+}
+
+.heading2JoinTheJourneyWrapper {
+  display: flex;
+  justify-content: center;
+  font-size: 34.5px;
+  color: var(--color-white);
+  font-family: var(--font-montaga);
+}
+
+.heading2Container {
+  margin: 0;
+  font-size: 36px;
+  line-height: 1.2;
+  font-weight: 400;
+}
+
+.journey {
+  color: var(--color-darkkhaki-100);
+}
+
+.receiveUpdatesOn {
+  font-size: 14.8px;
+  line-height: var(--lh-26);
+  color: var(--color-burlywood-400);
+}
+
+.subscribeField {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  gap: var(--gap-12);
+  align-items: center;
+  justify-content: center;
+}
+
+.input {
+  flex: 1;
+  border-radius: var(--br-9999);
+  background-color: var(--color-gray-100);
+  border: 1px solid var(--color-darkkhaki-700);
+  padding: 14px 24px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  height: 50px;
+  transition: border-color 0.3s ease;
+}
+
+.input:focus-within {
+  border-color: var(--color-darkkhaki-100);
+}
+
+.yourEmailAddress {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  font-family: var(--font-inter);
+  font-size: var(--fs-12_9);
+  background-color: transparent;
+  color: var(--color-white);
+}
+
+.yourEmailAddress::placeholder {
+  color: var(--color-burlywood-300);
+}
+
+.button {
+  cursor: pointer;
+  border: 0;
+  padding: 0 32px;
+  background-color: var(--color-darkkhaki-100);
+  height: 50px;
+  border-radius: var(--br-9999);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.button:hover {
+  background-color: var(--color-burlywood-100);
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 6px 15px rgba(201, 168, 76, 0.3);
+}
+
+.subscribe {
+  font-size: var(--fs-13_3);
+  letter-spacing: var(--ls-2_1);
+  text-transform: uppercase;
+  font-family: var(--font-inter);
+  color: var(--color-gray-100);
+  font-weight: bold;
+}
+
+@media (max-width: 1024px) {
+  .section {
+    padding: 60px 5%;
+  }
+}
+
+@media (max-width: 768px) {
+  .heading2Container {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 600px) {
+  .subscribeField {
+    flex-direction: column;
+    width: 100%;
+  }
+  .input {
+    width: 100%;
+  }
+  .button {
+    width: 100%;
+  }
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.successMessage {
+  font-size: 16px;
+  color: var(--color-darkkhaki-100);
+  font-family: var(--font-montaga);
+  margin-top: 10px;
+  animation: fadeIn 0.4s ease;
+}
+
+.errorMessage {
+  color: #ff6b6b;
+  font-size: 13.5px;
+  margin-top: 10px;
+  font-family: var(--font-inter);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

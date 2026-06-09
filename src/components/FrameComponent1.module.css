@@ -1,0 +1,331 @@
+.sectionInner {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 80px 10% 120px;
+  box-sizing: border-box;
+  text-align: left;
+  font-size: var(--fs-11_4);
+  color: var(--color-darkkhaki-800);
+  font-family: var(--font-inter);
+  position: relative;
+}
+
+.frameParent {
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 80px;
+}
+
+.frameWrapper {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.frameGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-24);
+  max-width: 480px;
+}
+
+.frameContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-12);
+}
+
+.horizontalDividerWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.horizontalDivider {
+  width: var(--width-40);
+  height: var(--height-1);
+  background-color: var(--color-darkkhaki-100);
+}
+
+.aPoetryCollection {
+  letter-spacing: var(--ls-3_6);
+  line-height: var(--lh-16);
+  text-transform: uppercase;
+  font-size: var(--fs-11_1);
+  color: var(--color-darkkhaki-100);
+}
+
+.theParent {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-montaga);
+}
+
+.the {
+  font-size: 56px;
+  line-height: 1.1;
+  color: var(--color-white);
+}
+
+.rooted {
+  font-size: 78px;
+  line-height: 1.1;
+  color: var(--color-darkkhaki-100);
+  font-weight: bold;
+}
+
+.soul {
+  font-size: 64px;
+  line-height: 1.1;
+  color: var(--color-white);
+}
+
+.aJourneyFromStruggleToJoyWrapper {
+  display: flex;
+  align-items: center;
+  color: var(--color-burlywood-600);
+  font-size: var(--fs-17_3);
+}
+
+.aJourneyFrom {
+  font-style: italic;
+  letter-spacing: 0.45px;
+  line-height: var(--lh-28);
+}
+
+.aPowerfulCollectionOfPoetrWrapper {
+  display: flex;
+  align-items: center;
+  font-size: var(--fs-14_9);
+  color: var(--color-darkkhaki-900);
+}
+
+.aPowerfulCollection {
+  line-height: var(--lh-26);
+}
+
+.callToAction {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-16);
+  margin-top: 10px;
+}
+
+.link,
+.link2 {
+  cursor: pointer;
+  border-radius: var(--br-9999);
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-decoration: none;
+}
+
+.link {
+  border: 0;
+  padding: 0 32px;
+  background-color: var(--color-darkkhaki-100);
+}
+
+.link2 {
+  border: 1px solid var(--color-darkkhaki-800);
+  padding: 0 32px;
+  background-color: transparent;
+}
+
+.link:hover {
+  background-color: var(--color-burlywood-100);
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 6px 15px rgba(201, 168, 76, 0.3);
+}
+
+.link2:hover {
+  border-color: var(--color-darkkhaki-100);
+  background-color: rgba(201, 168, 76, 0.05);
+  transform: translateY(-3px) scale(1.03);
+}
+
+.buyTheBook {
+  font-size: 13.7px;
+  letter-spacing: var(--ls-2_1);
+  text-transform: uppercase;
+  font-family: var(--font-inter);
+  color: var(--color-gray-100);
+}
+
+.readASample {
+  font-size: var(--fs-13_2);
+  letter-spacing: var(--ls-2_1);
+  text-transform: uppercase;
+  font-family: var(--font-inter);
+  color: var(--color-darkkhaki-100);
+}
+
+.scrollParent {
+  flex: 1;
+  min-width: 300px;
+  max-width: 550px;
+  height: 500px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.imageAssets {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.overlayblur {
+  position: absolute;
+  top: 15%;
+  left: 15%;
+  width: 70%;
+  height: 70%;
+  filter: blur(60px);
+  border-radius: var(--br-9999);
+  background-color: var(--color-darkkhaki-1000);
+  z-index: 1;
+}
+
+.bookCoverMockup1Icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 2;
+  transition: transform 0.5s ease;
+  cursor: pointer;
+}
+
+.bookCoverMockup1Icon:hover {
+  transform: translateY(-8px) scale(1.02) rotate(1deg);
+}
+
+.scrollIndicator {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  z-index: 10;
+  opacity: 0.65;
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: bounce 2s infinite;
+}
+
+.scrollIndicator:hover {
+  opacity: 1;
+  transform: translateX(-50%) translateY(2px) scale(1.05);
+}
+
+.scrollText {
+  font-size: 11px;
+  letter-spacing: var(--ls-3_6);
+  line-height: var(--lh-16);
+  text-transform: uppercase;
+  color: var(--color-darkkhaki-800);
+  font-weight: 600;
+  user-select: none;
+}
+
+.scrollIcon {
+  width: var(--width-16);
+  height: var(--height-16);
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  40% {
+    transform: translateX(-50%) translateY(-6px);
+  }
+  60% {
+    transform: translateX(-50%) translateY(-3px);
+  }
+}
+
+@media (max-width: 1024px) {
+  .sectionInner {
+    padding: 60px 5%;
+  }
+  .frameParent {
+    gap: 40px;
+  }
+  .rooted {
+    font-size: 64px;
+  }
+  .the {
+    font-size: 46px;
+  }
+  .soul {
+    font-size: 52px;
+  }
+  .scrollParent {
+    height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .frameParent {
+    flex-direction: column-reverse;
+    gap: 40px;
+  }
+  .frameWrapper {
+    align-items: center;
+    text-align: center;
+  }
+  .frameGroup {
+    align-items: center;
+  }
+  .theParent {
+    align-items: center;
+  }
+  .frameContainer {
+    justify-content: center;
+  }
+  .scrollParent {
+    width: 100%;
+    max-width: 400px;
+    height: 350px;
+  }
+  .scrollIndicator {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .rooted {
+    font-size: 52px;
+  }
+  .the {
+    font-size: 38px;
+  }
+  .soul {
+    font-size: 42px;
+  }
+  .callToAction {
+    width: 100%;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .link, .link2 {
+    width: 100%;
+  }
+}

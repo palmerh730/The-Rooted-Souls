@@ -1,0 +1,124 @@
+.section {
+  width: 100%;
+  padding: 80px 10%;
+  background-color: var(--color-gray-200);
+  border-top: var(--border-1);
+  border-bottom: var(--border-1);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: var(--font-inria-serif);
+}
+
+.vehlclesWrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.vehlcles {
+  margin: 0;
+  font-size: var(--fs-80);
+  line-height: var(--lh-72);
+  font-weight: 400;
+  color: var(--color-darkkhaki-700);
+}
+
+.quoteBlock {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-32);
+  color: var(--color-burlywood-100);
+  font-family: var(--font-inter);
+}
+
+.blockquoteWe {
+  font-size: 28px;
+  line-height: var(--lh-40);
+  font-style: italic;
+  display: block;
+}
+
+.quoteBlockInner {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--color-darkkhaki-800);
+}
+
+.frameParent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-16);
+  width: 100%;
+}
+
+.frameWrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.authorDetailParent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.authorDetail {
+  display: flex;
+  justify-content: center;
+  width: 80px;
+}
+
+.horizontalDivider {
+  height: var(--height-1);
+  width: 100%;
+  background-color: var(--color-darkkhaki-600);
+}
+
+.theRootedSoul {
+  font-size: 12px;
+  letter-spacing: 2.8px;
+  line-height: var(--lh-20);
+  text-transform: uppercase;
+  color: var(--color-darkkhaki-100);
+}
+
+.theRootedSoul2 {
+  font-size: var(--fs-14_9);
+  line-height: var(--lh-26);
+  color: var(--color-darkkhaki-600);
+  max-width: 600px;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 60px 5%;
+  }
+  .blockquoteWe {
+    font-size: 22px;
+    line-height: 1.4;
+  }
+  .vehlcles {
+    font-size: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .blockquoteWe {
+    font-size: 18px;
+  }
+  .theRootedSoul2 {
+    font-size: 13px;
+  }
+}
