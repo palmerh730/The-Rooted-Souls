@@ -87,8 +87,8 @@ const MediaCard: FunctionComponent<MediaCardType> = ({
       <div className={styles.cardBody}>
         <h3 className={styles.cardTitle}>{item.title}</h3>
         <div className={styles.cardMeta}>
-          {item.categories?.name && (
-            <span className={styles.categoryBadge}>{item.categories.name}</span>
+          {(Array.isArray(item.categories) ? item.categories[0]?.name : item.categories?.name) && (
+            <span className={styles.categoryBadge}>{(Array.isArray(item.categories) ? item.categories[0]?.name : item.categories?.name)}</span>
           )}
           {item.publish_date && (
             <span className={styles.cardDate}>

@@ -1,15 +1,14 @@
 # The Rooted Soul - Website
 
-This is the codebase for **The Rooted Soul** web platform, built with a modern React (Vite) frontend and a Node.js/Express backend. 
+This is the codebase for **The Rooted Soul** web platform, built with a modern React (Vite) frontend. 
 
-It features a fully functional public gallery for displaying content, and a secured Admin Dashboard for uploading content directly to YouTube and storing metadata in Supabase.
+It features a fully functional public gallery for displaying content, and a secured Admin Dashboard for uploading content directly to YouTube and storing metadata in Supabase. It uses a **100% Serverless** architecture, meaning there is no backend server to maintain—the frontend talks directly to the database and YouTube!
 
 ## Tech Stack
 - **Frontend**: React, TypeScript, Vite, React Router
-- **Backend**: Node.js, Express, TypeScript, `tsx`
-- **Database**: Supabase (PostgreSQL)
-- **Video Storage**: Google YouTube Data API v3
-- **Deployment**: Split Architecture (Hostinger + Render)
+- **Database & Auth**: Supabase (PostgreSQL)
+- **Video Storage**: Google YouTube Data API v3 (Client-Side Resumable Uploads)
+- **Deployment**: Static File Hosting (Hostinger)
 
 ---
 
@@ -25,76 +24,60 @@ To run this application locally on your computer, follow these steps:
 2. **Environment Variables**
    Create a `.env` file in the root directory containing the following:
    ```env
-   # Backend Port
-   PORT=3001
-   
    # Supabase Configuration
-   SUPABASE_URL=your_supabase_url
-   SUPABASE_SERVICE_KEY=your_supabase_service_key
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
    
-   # Admin Authentication
-   ADMIN_EMAIL=your_chosen_admin_email
-   ADMIN_PASSWORD=your_chosen_admin_password
-   JWT_SECRET=any_long_random_string
-   
-   # YouTube API Integration
-   YOUTUBE_CLIENT_ID=your_google_client_id
-   YOUTUBE_CLIENT_SECRET=your_google_client_secret
-   YOUTUBE_REFRESH_TOKEN=your_oauth_refresh_token
-   
-   # Frontend API Endpoint (For Split Deployment)
-   # Leave blank for local development
-   VITE_API_URL=
+   # YouTube API Integration (For Client-Side Uploads)
+   VITE_YOUTUBE_CLIENT_ID=your_google_client_id
+
+   # Web3Forms Integration (For Contact Form)
+   VITE_WEB3FORMS_ACCESS_KEY=your_web3forms_key
    ```
 
-3. **Start the Development Servers**
+3. **Start the Development Server**
    ```bash
    npm run dev
    ```
-   This command starts both the Vite frontend (Port 5173) and the Node.js backend (Port 3001) simultaneously.
+   This command starts the Vite frontend at `http://localhost:5173`.
 
 ---
 
 ## 2. Admin Dashboard & Uploading Media
 
 The Admin Dashboard is the control center for adding media to the website.
-Access it by navigating to `/admin/login` on the website.
+Access it by navigating to `/admin/login` on the website and logging in with your Supabase Auth credentials.
 
 ### Categories
 Before uploading media, ensure you have created categories in the **Categories** tab (e.g., "Poem Recitations", "Radio Interviews"). These categories act as filters on the public website.
 
-### Uploading a Video (Direct Upload)
-Because of the custom YouTube integration, you upload videos directly from the dashboard!
-1. Select **Video** as the Media Type.
+### Uploading a YouTube Video (Direct Client-Side Upload)
+Because of the custom Serverless YouTube integration, you upload massive videos directly from your browser to YouTube!
+1. Select **YouTube Video** as the Media Type.
 2. Select your video file (`.mp4` or `.mov`).
-3. Click Save. The video uploads to your private YouTube channel securely in the background. The status will say **Processing**. Once Google finishes processing, it will say **Ready**.
+3. Click Save. A **Google Login popup** will appear. Once you click "Allow", your browser will securely upload the bytes directly to YouTube!
 
-### Uploading Audio (Interviews & Podcasts)
-1. Select **Audio / Podcast**.
-2. Upload a Cover Image (Thumbnail).
-3. Paste the external link (e.g., Spotify, Google Drive). When visitors click this card, it opens the external audio link seamlessly.
-
-### Uploading Articles
-1. Select **Article**.
-2. Paste the Article URL.
-3. Click "Auto-fill details" to scrape the title and description from the external news site!
+### Uploading Articles & External Links
+1. Select **Article / External Link**.
+2. Paste the URL.
+3. Click "Auto-fill details" to scrape the title and description from the external site!
 4. Upload a thumbnail (such as a screenshot of the article).
 
-### Publishing
-All newly uploaded media is saved as a **Draft**. Drafts are completely hidden from the public website. Once you verify the video works and the thumbnail looks correct, click **Publish** on the Dashboard to push it live!
+### Uploading Images & Screenshots
+1. Select **Image / Screenshot**.
+2. Upload your image file. The file is uploaded securely to your Supabase `media` bucket, and the public URL is saved in the database automatically.
 
 ---
 
-## 3. Deployment (Split Architecture)
+## 3. Deployment (Hostinger)
 
-This platform is configured for a **Split Deployment**:
-- The **Frontend** lives on Hostinger.
-- The **Backend** lives on Render.com.
+This platform is completely Serverless, meaning you only need to host the static Frontend files.
 
-For full step-by-step instructions on setting this up, please read the `Render_Setup_Guide.md` file included in this repository.
-
-### Quick Deployment Checklist
-1. Deploy the `server/index.ts` code to Render.
-2. In your local `.env`, set `VITE_API_URL=https://your-render-app-url.onrender.com`.
-3. Run `npm run build` locally.
-4. Upload the contents of the `/build` folder directly into your Hostinger `public_html` directory.
+### Deployment Checklist
+1. DO NOT upload your `.env` file!
+2. Delete the `node_modules` folder.
+3. Zip the entire `Alan MacDonald` folder.
+4. Upload the zip to Hostinger using the **Vite** preset.
+5. In the Hostinger Environment Variables UI (at the bottom of the deployment screen), add all 4 `VITE_` variables listed in step 1.
+6. Click **Save and Redeploy**.
+7. *Important:* Ensure your Hostinger domain is added to the "Authorized JavaScript origins" in your Google Cloud Console so the YouTube uploader popup functions correctly.

@@ -1,72 +1,66 @@
 .container {
   min-height: 100vh;
-  background-color: var(--color-gray-primary);
+  background-color: var(--color-gray-200);
+  background-image: var(--gradient-1);
   color: var(--color-white);
   font-family: var(--font-inter);
+  padding: 40px;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 40px;
-  background-color: var(--color-gray-secondary);
-  border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+  margin-bottom: 40px;
+  border-bottom: var(--border-1);
+  padding-bottom: 20px;
 }
 
 .title {
-  font-family: var(--font-montaga);
-  font-size: 24px;
+  font-family: var(--font-inria-serif);
+  font-size: 32px;
+  font-weight: 700;
   margin: 0;
 }
 
 .gold {
-  color: var(--color-gold-primary);
-}
-
-.headerRight {
-  display: flex;
-  gap: 20px;
-  align-items: center;
+  color: var(--color-darkkhaki-100);
 }
 
 .btnSecondary {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: var(--color-white);
-  padding: 8px 16px;
-  border-radius: 9999px;
-  cursor: pointer;
-  transition: all 0.3s;
+  background-color: rgba(26, 14, 0, 0.6);
+  color: var(--color-darkkhaki-100);
+  padding: 10px 20px;
+  border-radius: var(--br-12);
   text-decoration: none;
+  font-weight: 500;
   font-size: 14px;
+  border: var(--border-1);
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
-.btnSecondary:hover {
-  background: rgba(255, 255, 255, 0.1);
+.btnSecondary:hover:not(:disabled) {
+  background-color: var(--color-darkkhaki-400);
+  color: #fff;
+}
+
+.btnSecondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .main {
-  padding: 40px;
   max-width: 800px;
   margin: 0 auto;
 }
 
 .formCard {
-  background-color: var(--color-gray-secondary);
-  border-radius: 12px;
-  border: 1px solid rgba(201, 168, 76, 0.15);
+  background: var(--color-gray-100);
+  border: var(--border-1);
+  border-radius: var(--br-16);
   padding: 40px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.error {
-  background-color: rgba(255, 0, 0, 0.1);
-  color: #ff6b6b;
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  text-align: center;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
 }
 
 .form {
@@ -82,97 +76,80 @@
 }
 
 .label {
-  font-weight: 500;
   font-size: 14px;
-  color: var(--color-gold-primary);
+  font-weight: 600;
+  color: var(--color-darkkhaki-100);
 }
 
-.input,
-.textarea {
-  background-color: var(--color-gray-darkest);
-  border: 1px solid rgba(201, 168, 76, 0.3);
+.input, .textarea, .select, .fileInput {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #fff;
+  padding: 12px 16px;
   border-radius: 8px;
-  padding: 12px;
-  color: var(--color-white);
   font-family: var(--font-inter);
-  font-size: 16px;
+  font-size: 15px;
+  transition: all 0.2s;
   width: 100%;
   box-sizing: border-box;
 }
 
-.textarea {
-  resize: vertical;
+.input:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--color-darkkhaki-100);
+  background: rgba(0,0,0,0.3);
 }
 
-.input:focus,
-.textarea:focus {
-  outline: none;
-  border-color: var(--color-gold-primary);
+.input option {
+  background: var(--color-gray-100);
+  color: #fff;
 }
 
 .fileInput {
-  background-color: transparent;
-  color: var(--color-white);
-  font-family: var(--font-inter);
+  padding: 10px;
+  color: #aaa;
 }
 
 .fileInput::file-selector-button {
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: var(--color-white);
-  padding: 8px 16px;
+  background: var(--color-darkkhaki-100);
+  color: var(--color-gray-100);
+  border: none;
+  padding: 6px 12px;
   border-radius: 4px;
-  cursor: pointer;
-  margin-right: 10px;
-  transition: all 0.2s;
-}
-
-.fileInput::file-selector-button:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-.flexRow {
-  display: flex;
-  gap: 10px;
-}
-
-.btnFetch {
-  background-color: rgba(201, 168, 76, 0.15);
-  color: var(--color-gold-primary);
-  border: 1px solid var(--color-gold-primary);
-  border-radius: 8px;
-  padding: 0 16px;
-  cursor: pointer;
   font-weight: 600;
-  white-space: nowrap;
-  transition: all 0.2s;
-}
-
-.btnFetch:hover {
-  background-color: var(--color-gold-primary);
-  color: var(--color-gray-primary);
+  cursor: pointer;
+  margin-right: 12px;
 }
 
 .submitBtn {
-  background-color: var(--color-gold-primary);
-  color: var(--color-gray-primary);
+  background-color: var(--color-darkkhaki-100);
+  color: var(--color-gray-100);
+  padding: 16px;
+  border-radius: var(--br-12);
   border: none;
-  border-radius: 9999px;
-  padding: 14px;
-  font-family: var(--font-inter);
-  font-weight: 600;
+  font-weight: 700;
   font-size: 16px;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  margin-top: 10px;
+  transition: all 0.2s ease;
+  margin-top: 16px;
 }
 
 .submitBtn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(201, 168, 76, 0.3);
+  background-color: #fff;
+  box-shadow: 0 0 20px var(--color-darkkhaki-300);
 }
 
 .submitBtn:disabled {
-  opacity: 0.7;
+  opacity: 0.5;
   cursor: not-allowed;
+}
+
+.error {
+  background: rgba(255, 71, 87, 0.1);
+  color: #ff4757;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 71, 87, 0.3);
+  margin-bottom: 24px;
+  font-size: 14px;
 }

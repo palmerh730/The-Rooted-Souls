@@ -1,6 +1,6 @@
 import { FunctionComponent, useEffect, useState, FormEvent } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
+import { supabase } from "../../supabase";
 import styles from "./AdminCategories.module.css";
 
 interface Category {
@@ -14,21 +14,21 @@ const AdminCategories: FunctionComponent = () => {
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState("");
   const [editingId, setEditingId] = useState<number | null>(null);
-  const { token } = useAuth();
 
   useEffect(() => {
     fetchCategories();
-  }, [token]);
+  }, []);
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/categories", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setCategories(data);
-      }
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("categories")
+        .select("*")
+        .order("sort_order", { ascending: true });
+        
+      if (data) setCategories(data);
+      if (error) console.error(error);
     } catch (err) {
       console.error(err);
     } finally {
@@ -40,24 +40,22 @@ const AdminCategories: FunctionComponent = () => {
     e.preventDefault();
     if (!name.trim()) return;
 
+    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+
     try {
-      const url = editingId ? `${import.meta.env.VITE_API_URL || ""}/api/categories/${editingId}` : `${import.meta.env.VITE_API_URL || ""}/api/categories";
-      const method = editingId ? "PUT" : "POST";
-
-      const res = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ name }),
-      });
-
-      if (res.ok) {
-        setName("");
-        setEditingId(null);
-        fetchCategories();
+      if (editingId) {
+        await supabase
+          .from("categories")
+          .update({ name, slug })
+          .eq("id", editingId);
+      } else {
+        await supabase
+          .from("categories")
+          .insert([{ name, slug }]);
       }
+      setName("");
+      setEditingId(null);
+      fetchCategories();
     } catch (err) {
       console.error(err);
     }
@@ -76,13 +74,8 @@ const AdminCategories: FunctionComponent = () => {
   const handleDelete = async (id: number) => {
     if (!window.confirm("Are you sure? This might affect media items using this category.")) return;
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/categories/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (res.ok) {
-        fetchCategories();
-      }
+      await supabase.from("categories").delete().eq("id", id);
+      fetchCategories();
     } catch (err) {
       console.error(err);
     }
@@ -94,14 +87,14 @@ const AdminCategories: FunctionComponent = () => {
         <div className={styles.headerLeft}>
           <h1 className={styles.title}>Admin <span className={styles.gold}>Categories</span></h1>
         </div>
-        <div className={styles.headerRight}>
+        <div className={styles.headerRight} style={{ display: 'flex', gap: '16px' }}>
+          <Link to="/" className={styles.btnSecondary} style={{ borderColor: 'var(--color-darkkhaki-100)', color: 'var(--color-darkkhaki-100)' }}>View Live Site</Link>
           <Link to="/admin/dashboard" className={styles.btnSecondary}>Back to Dashboard</Link>
         </div>
       </header>
 
       <main className={styles.main}>
         <div className={styles.content}>
-          
           <div className={styles.formSection}>
             <h2 className={styles.sectionTitle}>{editingId ? "Edit Category" : "Add New Category"}</h2>
             <form onSubmit={handleSubmit} className={styles.form}>
@@ -173,7 +166,6 @@ const AdminCategories: FunctionComponent = () => {
               </div>
             )}
           </div>
-
         </div>
       </main>
     </div>

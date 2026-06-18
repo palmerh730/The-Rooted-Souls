@@ -2,6 +2,7 @@ import { FunctionComponent, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import MediaCard from "./MediaCard";
 import VideoModal from "./VideoModal";
+import { supabase } from "../supabase";
 import styles from "./MediaTeaser.module.css";
 import type { MediaItem } from "./MediaCard";
 
@@ -19,20 +20,22 @@ const MediaTeaser: FunctionComponent<MediaTeaserType> = ({
   useEffect(() => {
     const fetchMedia = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/media?featured=true&limit=3");
-        if (!res.ok) return;
-        const data = await res.json();
-        setItems(
-          Array.isArray(data) ? data.slice(0, 3) : (data.items || []).slice(0, 3),
-        );
-      } catch {
-        /* graceful degradation — render nothing */
+        const { data, error } = await supabase
+          .from("media_items")
+          .select(`*, categories(name)`)
+          .eq("published", true)
+          .eq("featured", true)
+          .order("created_at", { ascending: false })
+          .limit(3);
+          
+        if (data) setItems(data);
+        if (error) console.error(error);
+      } catch (err) {
+        console.error(err);
       }
     };
     fetchMedia();
   }, []);
-
-
 
   return (
     <section

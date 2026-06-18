@@ -1,6 +1,6 @@
 import { FunctionComponent, useEffect, useState, FormEvent, ChangeEvent } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
+import { supabase } from "../../supabase";
 import styles from "./AdminMediaForm.module.css";
 
 interface Category {
@@ -10,39 +10,39 @@ interface Category {
 
 const AdminMediaForm: FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
-  const isEdit = !!id;
+  const isEdit = !!id && id !== "new";
   const navigate = useNavigate();
-  const { token } = useAuth();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [type, setType] = useState<"video" | "article" | "image">("video");
-  const [videoFile, setVideoFile] = useState<File | null>(null);
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [articleUrl, setArticleUrl] = useState("");
+  const [mediaUrl, setMediaUrl] = useState("");
   const [source, setSource] = useState("");
+  
+  const [videoFile, setVideoFile] = useState<File | null>(null);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
   const [fetchingMeta, setFetchingMeta] = useState(false);
   const [error, setError] = useState("");
 
+  // YouTube OAuth token
+  const [ytAccessToken, setYtAccessToken] = useState<string | null>(null);
+
   useEffect(() => {
     fetchCategories();
     if (isEdit) {
       fetchMediaItem();
     }
-  }, [id, token]);
+  }, [id]);
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/categories", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (res.ok) {
-        const data = await res.json();
+      const { data } = await supabase.from("categories").select("id, name");
+      if (data) {
         setCategories(data);
         if (data.length > 0 && !isEdit && !category) {
           setCategory(data[0].id.toString());
@@ -55,16 +55,13 @@ const AdminMediaForm: FunctionComponent = () => {
 
   const fetchMediaItem = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/media/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (res.ok) {
-        const data = await res.json();
+      const { data } = await supabase.from("media_items").select("*").eq("id", id).single();
+      if (data) {
         setTitle(data.title || "");
         setDescription(data.description || "");
         setCategory(data.category_id?.toString() || "");
         setType(data.media_type || "video");
-        setArticleUrl(data.article_url || "");
+        setMediaUrl(data.media_type === "video" ? (data.video_url || "") : (data.article_url || ""));
         setSource(data.article_source || "");
       }
     } catch (err) {
@@ -72,39 +69,41 @@ const AdminMediaForm: FunctionComponent = () => {
     }
   };
 
-  const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setThumbnailFile(e.target.files[0]);
-    }
-  };
-
   const handleVideoChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setVideoFile(e.target.files[0]);
-    }
+    if (e.target.files && e.target.files[0]) setVideoFile(e.target.files[0]);
   };
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setImageFile(e.target.files[0]);
-    }
+    if (e.target.files && e.target.files[0]) setImageFile(e.target.files[0]);
+  };
+
+  const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) setThumbnailFile(e.target.files[0]);
   };
 
   const handleFetchMetadata = async () => {
-    if (!articleUrl) return;
+    if (!mediaUrl) return;
     setFetchingMeta(true);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/metadata', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: articleUrl })
-      });
+      // Use AllOrigins as a free CORS proxy
+      const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(mediaUrl)}`);
       if (res.ok) {
         const data = await res.json();
-        if (data.title && !title) setTitle(data.title);
-        if (data.description && !description) setDescription(data.description);
-        // Note: setting the actual file from an image URL requires downloading it. 
-        // For now, auto-filling title and description is supported.
+        const html = data.contents;
+        
+        // Very basic regex parsing for title and description from HTML
+        const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
+        if (titleMatch && titleMatch[1] && !title) {
+          setTitle(titleMatch[1].trim());
+        }
+        
+        const descMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["']([^"']+)["'][^>]*>/i) 
+                       || html.match(/<meta[^>]*content=["']([^"']+)["'][^>]*name=["']description["'][^>]*>/i)
+                       || html.match(/<meta[^>]*property=["']og:description["'][^>]*content=["']([^"']+)["'][^>]*>/i);
+                       
+        if (descMatch && descMatch[1] && !description) {
+          setDescription(descMatch[1].trim());
+        }
       }
     } catch (err) {
       console.error(err);
@@ -113,63 +112,189 @@ const AdminMediaForm: FunctionComponent = () => {
     }
   };
 
+  const uploadToYouTube = async (token: string): Promise<string> => {
+    if (!videoFile) throw new Error("Video file is missing.");
+    
+    // 1. Initialize resumable upload
+    const initRes = await fetch('https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'X-Upload-Content-Length': videoFile.size.toString(),
+        'X-Upload-Content-Type': videoFile.type
+      },
+      body: JSON.stringify({
+        snippet: {
+          title,
+          description,
+          categoryId: "22" // People & Blogs
+        },
+        status: {
+          privacyStatus: "public",
+          embeddable: true
+        }
+      })
+    });
+
+    if (!initRes.ok) {
+      const err = await initRes.json();
+      throw new Error(`YouTube init failed: ${err.error?.message || 'Unknown error'}`);
+    }
+
+    const locationUrl = initRes.headers.get('Location');
+    if (!locationUrl) {
+      throw new Error("YouTube API did not return an upload URL.");
+    }
+
+    // 2. Upload the physical file bytes
+    const uploadRes = await fetch(locationUrl, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': videoFile.type
+      },
+      body: videoFile
+    });
+
+    if (!uploadRes.ok) {
+      throw new Error(`YouTube video upload failed: ${uploadRes.statusText}`);
+    }
+
+    const videoData = await uploadRes.json();
+    return videoData.id;
+  };
+
+  const triggerUploadAndSave = async (ytToken?: string) => {
+    try {
+      let finalMediaUrl = mediaUrl;
+      let finalThumbnailPath = null;
+
+      // --- 1. UPLOAD IMAGE FILE (if type is image) ---
+      if (type === "image" && imageFile) {
+        const fileExt = imageFile.name.split('.').pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('media')
+          .upload(`images/${fileName}`, imageFile);
+          
+        if (uploadError) throw new Error("Image upload failed: " + uploadError.message);
+        
+        const { data: { publicUrl } } = supabase.storage
+          .from('media')
+          .getPublicUrl(uploadData.path);
+          
+        finalThumbnailPath = publicUrl;
+      }
+
+      // --- 2. UPLOAD THUMBNAIL (if custom thumbnail provided) ---
+      if (thumbnailFile && type !== "image") {
+        const fileExt = thumbnailFile.name.split('.').pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('media')
+          .upload(`thumbnails/${fileName}`, thumbnailFile);
+          
+        if (uploadError) throw new Error("Thumbnail upload failed: " + uploadError.message);
+        
+        const { data: { publicUrl } } = supabase.storage
+          .from('media')
+          .getPublicUrl(uploadData.path);
+          
+        finalThumbnailPath = publicUrl;
+      }
+
+      // --- 3. UPLOAD YOUTUBE VIDEO ---
+      if (type === "video" && videoFile && !isEdit) {
+        if (!ytToken) throw new Error("YouTube Access Token is missing.");
+        const videoId = await uploadToYouTube(ytToken);
+        finalMediaUrl = `https://www.youtube.com/watch?v=${videoId}`;
+        
+        // Auto-fetch YT thumbnail if no custom thumbnail was uploaded
+        if (!finalThumbnailPath) {
+          finalThumbnailPath = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+        }
+      }
+
+      // Fallback for auto-fetching YT thumbnail if just editing/pasting a link manually
+      if (!finalThumbnailPath && type === "video" && finalMediaUrl.includes("youtu")) {
+        const videoIdMatch = finalMediaUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+        if (videoIdMatch && videoIdMatch[1]) {
+          finalThumbnailPath = `https://img.youtube.com/vi/${videoIdMatch[1]}/maxresdefault.jpg`;
+        }
+      }
+
+      // --- 4. SAVE TO DATABASE ---
+      const mediaData: any = {
+        title,
+        description,
+        category_id: category ? parseInt(category) : null,
+        media_type: type,
+        published: true
+      };
+
+      if (type === "video") {
+        mediaData.video_url = finalMediaUrl;
+      } else if (type === "article") {
+        mediaData.article_url = finalMediaUrl;
+        mediaData.article_source = source;
+      }
+
+      if (finalThumbnailPath) {
+        mediaData.thumbnail_path = finalThumbnailPath;
+      }
+
+      if (isEdit) {
+        const { error: updateError } = await supabase.from("media_items").update(mediaData).eq("id", id);
+        if (updateError) throw updateError;
+      } else {
+        const { error: insertError } = await supabase.from("media_items").insert([mediaData]);
+        if (insertError) throw insertError;
+      }
+
+      navigate("/admin/dashboard");
+    } catch (err: any) {
+      setError(err.message || "An error occurred during save.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    try {
-      const formData = new FormData();
-      formData.append("title", title);
-      formData.append("description", description);
-      if (category) formData.append("category_id", category);
-      formData.append("media_type", type);
-      
-      if (type === "video") {
-        if (!isEdit && !videoFile) {
-          throw new Error("Video file is required for new videos");
-        }
-        if (videoFile) {
-          formData.append("video_file", videoFile);
-        }
-      } else if (type === "image") {
-        if (!isEdit && !imageFile) {
-          throw new Error("Image file is required");
-        }
-        if (imageFile) {
-          // Send image as thumbnail so it uploads like other images
-          formData.append("thumbnail", imageFile);
-        }
-      } else {
-        formData.append("article_url", articleUrl);
-        formData.append("article_source", source);
+    // If it's a new video upload, we need to trigger Google Identity Services first
+    if (type === "video" && videoFile && !isEdit) {
+      if (!import.meta.env.VITE_YOUTUBE_CLIENT_ID) {
+        setError("VITE_YOUTUBE_CLIENT_ID environment variable is missing.");
+        setLoading(false);
+        return;
       }
 
-      if (thumbnailFile && type !== "image") {
-        formData.append("thumbnail", thumbnailFile);
+      try {
+        // @ts-ignore
+        const client = google.accounts.oauth2.initTokenClient({
+          client_id: import.meta.env.VITE_YOUTUBE_CLIENT_ID,
+          scope: 'https://www.googleapis.com/auth/youtube.upload',
+          callback: (response: any) => {
+            if (response.error) {
+              setError(`Google Login failed: ${response.error}`);
+              setLoading(false);
+              return;
+            }
+            // Once we have the token, proceed with the actual upload and save process
+            triggerUploadAndSave(response.access_token);
+          },
+        });
+        client.requestAccessToken();
+      } catch (err: any) {
+        setError("Failed to initialize Google Login. Ensure 'https://accounts.google.com/gsi/client' is loaded in index.html.");
+        setLoading(false);
       }
-
-      const url = isEdit ? `${import.meta.env.VITE_API_URL || ""}/api/media/${id}` : `${import.meta.env.VITE_API_URL || ""}/api/media";
-      const method = isEdit ? "PUT" : "POST";
-
-      const res = await fetch(url, {
-        method,
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-        body: formData,
-      });
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || "Failed to save media");
-      }
-
-      navigate("/admin/dashboard");
-    } catch (err: any) {
-      setError(err.message || "An error occurred");
-    } finally {
-      setLoading(false);
+    } else {
+      // For articles, images, or editing existing videos, just run it immediately
+      await triggerUploadAndSave();
     }
   };
 
@@ -181,7 +306,8 @@ const AdminMediaForm: FunctionComponent = () => {
             {isEdit ? "Edit" : "Add"} <span className={styles.gold}>Media</span>
           </h1>
         </div>
-        <div className={styles.headerRight}>
+        <div className={styles.headerRight} style={{ display: 'flex', gap: '16px' }}>
+          <Link to="/" className={styles.btnSecondary} style={{ borderColor: 'var(--color-darkkhaki-100)', color: 'var(--color-darkkhaki-100)' }}>View Live Site</Link>
           <Link to="/admin/dashboard" className={styles.btnSecondary}>Cancel</Link>
         </div>
       </header>
@@ -199,7 +325,7 @@ const AdminMediaForm: FunctionComponent = () => {
                 className={styles.input}
                 disabled={isEdit}
               >
-                <option value="video">Video</option>
+                <option value="video">YouTube Video</option>
                 <option value="article">Article / External Link</option>
                 <option value="image">Image / Screenshot</option>
               </select>
@@ -244,19 +370,21 @@ const AdminMediaForm: FunctionComponent = () => {
               <div className={styles.formGroup}>
                 <label className={styles.label}>Video File (MP4, MOV)</label>
                 {!isEdit ? (
-                  <input
-                    type="file"
-                    accept="video/*"
-                    onChange={handleVideoChange}
-                    className={styles.fileInput}
-                    required
-                  />
+                  <>
+                    <input
+                      type="file"
+                      accept="video/*"
+                      onChange={handleVideoChange}
+                      className={styles.fileInput}
+                      required
+                    />
+                    <p style={{fontSize: '12px', color: '#888', marginTop: '4px'}}>
+                      Video will be uploaded directly to your YouTube channel. A Google Login popup will appear when you click save.
+                    </p>
+                  </>
                 ) : (
                   <p style={{color: '#c9a84c', fontSize: '14px'}}>Video file cannot be changed after initial upload.</p>
                 )}
-                <p style={{fontSize: '12px', color: '#888', marginTop: '4px'}}>
-                  File will be processed in the background and automatically uploaded to YouTube.
-                </p>
               </div>
             ) : type === "image" ? (
               <div className={styles.formGroup}>
@@ -276,19 +404,19 @@ const AdminMediaForm: FunctionComponent = () => {
             ) : (
               <>
                 <div className={styles.formGroup}>
-                  <label className={styles.label}>Article / Media URL (Google Drive, News, etc.)</label>
+                  <label className={styles.label}>Article / Media URL</label>
                   <div style={{ display: 'flex', gap: '10px' }}>
                     <input
                       type="url"
-                      value={articleUrl}
-                      onChange={(e) => setArticleUrl(e.target.value)}
+                      value={mediaUrl}
+                      onChange={(e) => setMediaUrl(e.target.value)}
                       className={styles.input}
                       required={type === "article"}
                     />
                     <button 
                       type="button" 
                       onClick={handleFetchMetadata}
-                      disabled={fetchingMeta || !articleUrl}
+                      disabled={fetchingMeta || !mediaUrl}
                       className={styles.btnSecondary}
                       style={{ padding: '0 16px', whiteSpace: 'nowrap' }}
                     >
@@ -310,7 +438,7 @@ const AdminMediaForm: FunctionComponent = () => {
 
             {type !== "image" && (
               <div className={styles.formGroup}>
-                <label className={styles.label}>Thumbnail Image (Optional)</label>
+                <label className={styles.label}>Custom Thumbnail Image (Optional)</label>
                 <input
                   type="file"
                   accept="image/*"
@@ -321,7 +449,7 @@ const AdminMediaForm: FunctionComponent = () => {
             )}
 
             <button type="submit" disabled={loading} className={styles.submitBtn}>
-              {loading ? "Starting Upload..." : (isEdit ? "Update Media" : "Upload & Save")}
+              {loading ? "Processing (Please do not close page)..." : (isEdit ? "Update Media" : "Upload & Save")}
             </button>
           </form>
         </div>

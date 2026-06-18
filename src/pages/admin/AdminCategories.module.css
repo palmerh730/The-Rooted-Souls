@@ -1,70 +1,75 @@
 .container {
   min-height: 100vh;
-  background-color: var(--color-gray-primary);
+  background-color: var(--color-gray-200);
+  background-image: var(--gradient-1);
   color: var(--color-white);
   font-family: var(--font-inter);
+  padding: 40px;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 40px;
-  background-color: var(--color-gray-secondary);
-  border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+  margin-bottom: 40px;
+  border-bottom: var(--border-1);
+  padding-bottom: 20px;
 }
 
 .title {
-  font-family: var(--font-montaga);
-  font-size: 24px;
+  font-family: var(--font-inria-serif);
+  font-size: 32px;
+  font-weight: 700;
   margin: 0;
 }
 
 .gold {
-  color: var(--color-gold-primary);
+  color: var(--color-darkkhaki-100);
 }
 
 .btnSecondary {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: var(--color-white);
-  padding: 8px 16px;
-  border-radius: 9999px;
-  cursor: pointer;
-  transition: all 0.3s;
+  background-color: rgba(26, 14, 0, 0.6);
+  color: var(--color-darkkhaki-100);
+  padding: 10px 20px;
+  border-radius: var(--br-12);
   text-decoration: none;
+  font-weight: 500;
   font-size: 14px;
+  border: var(--border-1);
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .btnSecondary:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background-color: var(--color-darkkhaki-400);
+  color: #fff;
 }
 
 .main {
-  padding: 40px;
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
 .content {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 350px 1fr;
   gap: 40px;
+  align-items: start;
+}
+
+.formSection, .listSection {
+  background: var(--color-gray-100);
+  border: var(--border-1);
+  border-radius: var(--br-16);
+  padding: 30px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
 }
 
 .sectionTitle {
-  font-family: var(--font-montaga);
-  font-size: 20px;
-  color: var(--color-gold-primary);
-  margin-top: 0;
-  margin-bottom: 20px;
-}
-
-.formSection {
-  background-color: var(--color-gray-secondary);
-  border-radius: 12px;
-  border: 1px solid rgba(201, 168, 76, 0.15);
-  padding: 30px;
+  font-family: var(--font-inria-serif);
+  font-size: 24px;
+  color: var(--color-darkkhaki-100);
+  margin: 0 0 24px 0;
 }
 
 .formGroup {
@@ -75,65 +80,63 @@
 
 .label {
   font-size: 14px;
-  color: var(--color-white);
+  font-weight: 600;
+  color: #aaa;
 }
 
 .inputRow {
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .input {
-  flex: 1;
-  background-color: var(--color-gray-darkest);
-  border: 1px solid rgba(201, 168, 76, 0.3);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #fff;
+  padding: 12px 16px;
   border-radius: 8px;
-  padding: 10px 12px;
-  color: var(--color-white);
   font-family: var(--font-inter);
-  font-size: 16px;
+  font-size: 15px;
+  transition: all 0.2s;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .input:focus {
   outline: none;
-  border-color: var(--color-gold-primary);
+  border-color: var(--color-darkkhaki-100);
+  background: rgba(0,0,0,0.3);
 }
 
 .submitBtn {
-  background-color: var(--color-gold-primary);
-  color: var(--color-gray-primary);
-  border: none;
+  background-color: var(--color-darkkhaki-100);
+  color: var(--color-gray-100);
+  padding: 12px;
   border-radius: 8px;
-  padding: 0 20px;
-  font-family: var(--font-inter);
-  font-weight: 600;
+  border: none;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
 .submitBtn:hover {
-  background-color: var(--color-gold-secondary);
+  background-color: #fff;
 }
 
 .cancelBtn {
-  background: transparent;
-  color: var(--color-white);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: transparent;
+  color: #aaa;
+  padding: 12px;
   border-radius: 8px;
-  padding: 0 20px;
+  border: 1px solid rgba(255,255,255,0.1);
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .cancelBtn:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.listSection {
-  background-color: var(--color-gray-secondary);
-  border-radius: 12px;
-  border: 1px solid rgba(201, 168, 76, 0.15);
-  padding: 30px;
+  background: rgba(255,255,255,0.05);
+  color: #fff;
 }
 
 .tableContainer {
@@ -146,25 +149,26 @@
   text-align: left;
 }
 
-.table th,
-.table td {
-  padding: 12px 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
 .table th {
-  color: var(--color-gold-primary);
-  font-weight: 500;
+  padding: 16px;
   font-size: 14px;
+  font-weight: 600;
+  color: var(--color-darkkhaki-100);
+  border-bottom: var(--border-1);
 }
 
-.table tr:last-child td {
-  border-bottom: none;
+.table td {
+  padding: 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
 .slug {
-  color: rgba(255, 255, 255, 0.5);
+  color: #aaa;
   font-family: monospace;
+  font-size: 13px;
+  background: rgba(255,255,255,0.05);
+  padding: 2px 6px;
+  border-radius: 4px;
 }
 
 .actions {
@@ -173,37 +177,37 @@
 }
 
 .actionBtn {
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  color: var(--color-white);
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.1);
   padding: 6px 12px;
-  border-radius: 4px;
-  font-size: 12px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.2s;
+  font-size: 13px;
+  transition: background 0.2s;
 }
 
 .actionBtn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255,255,255,0.15);
 }
 
 .actionDelete {
-  background: rgba(231, 76, 60, 0.1);
-  color: #e74c3c;
+  color: #ff4757;
+  border-color: rgba(255, 71, 87, 0.3);
 }
 
 .actionDelete:hover {
-  background: rgba(231, 76, 60, 0.2);
+  background: rgba(255, 71, 87, 0.1);
 }
 
 .empty {
   text-align: center;
-  color: rgba(255, 255, 255, 0.5);
-  padding: 30px !important;
+  color: #888;
+  padding: 40px !important;
 }
 
-.loading {
-  text-align: center;
-  padding: 30px;
-  color: var(--color-gold-primary);
+@media (max-width: 768px) {
+  .content {
+    grid-template-columns: 1fr;
+  }
 }

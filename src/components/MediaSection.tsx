@@ -2,6 +2,7 @@ import { FunctionComponent, useState, useEffect } from "react";
 import MediaCard from "./MediaCard";
 import VideoModal from "./VideoModal";
 import ImageModal from "./ImageModal";
+import { supabase } from "../supabase";
 import styles from "../pages/MediaGallery.module.css";
 import type { MediaItem } from "./MediaCard";
 
@@ -26,21 +27,25 @@ const MediaSection: FunctionComponent<MediaSectionType> = ({ className = "" }) =
     const fetchData = async () => {
       try {
         const [mediaRes, catRes] = await Promise.all([
-          fetch(`${import.meta.env.VITE_API_URL || ""}/api/media"),
-          fetch(`${import.meta.env.VITE_API_URL || ""}/api/categories"),
+          supabase
+            .from("media_items")
+            .select(`*, categories(name)`)
+            .eq("published", true)
+            .order("created_at", { ascending: false }),
+          supabase
+            .from("categories")
+            .select("*")
+            .order("sort_order", { ascending: true })
         ]);
-        if (mediaRes.ok) {
-          const mediaData = await mediaRes.json();
-          setItems(
-            Array.isArray(mediaData) ? mediaData : mediaData.items || [],
-          );
+
+        if (mediaRes.data) {
+          setItems(mediaRes.data);
         }
-        if (catRes.ok) {
-          const catData = await catRes.json();
-          setCategories(Array.isArray(catData) ? catData : []);
+        if (catRes.data) {
+          setCategories(catRes.data);
         }
-      } catch {
-        /* silent failure */
+      } catch (err) {
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -51,10 +56,10 @@ const MediaSection: FunctionComponent<MediaSectionType> = ({ className = "" }) =
   const filteredItems =
     activeCategory === "all"
       ? items
-      : items.filter(
-          (item) =>
-            item.categories?.name?.toLowerCase() === activeCategory.toLowerCase(),
-        );
+      : items.filter((item) => {
+          const catName = Array.isArray(item.categories) ? item.categories[0]?.name : item.categories?.name;
+          return catName?.toLowerCase() === activeCategory.toLowerCase();
+        });
 
   return (
     <section className={[styles.content, className].join(" ")} data-scroll-to="mediaLibrary" id="media-section" style={{ borderTop: "var(--border-1)" }}>
