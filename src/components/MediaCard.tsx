@@ -34,7 +34,11 @@ const MediaCard: FunctionComponent<MediaCardType> = ({
     } else if (item.media_type === "image" && onVideoClick) {
       onVideoClick(item);
     } else if (item.media_type === "article" && item.article_url) {
-      window.open(item.article_url, "_blank", "noopener,noreferrer");
+      if (item.article_url.includes("drive.google.com") && onVideoClick) {
+        onVideoClick(item);
+      } else {
+        window.open(item.article_url, "_blank", "noopener,noreferrer");
+      }
     }
   };
 

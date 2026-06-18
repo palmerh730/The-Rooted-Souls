@@ -117,9 +117,11 @@ const MediaSection: FunctionComponent<MediaSectionType> = ({ className = "" }) =
         </div>
       )}
 
-      {activeVideo && activeVideo.media_type === "video" && activeVideo.video_url && (
+      {activeVideo && 
+        ((activeVideo.media_type === "video" && activeVideo.video_url) || 
+         (activeVideo.media_type === "article" && activeVideo.article_url?.includes("drive.google.com"))) && (
         <VideoModal
-          videoUrl={activeVideo.video_url}
+          videoUrl={activeVideo.video_url || activeVideo.article_url || ""}
           title={activeVideo.title}
           description={activeVideo.description}
           onClose={() => setActiveVideo(null)}

@@ -19,6 +19,9 @@ function extractYouTubeId(url: string): string | null {
     const match = url.match(pattern);
     if (match) return match[1];
   }
+  const driveMatch = url.match(/(?:drive\.google\.com\/file\/d\/)([a-zA-Z0-9_-]+)/);
+  if (driveMatch) return `drive:${driveMatch[1]}`;
+
   return null;
 }
 
@@ -47,9 +50,14 @@ const VideoModal: FunctionComponent<VideoModalType> = ({
   }, [handleKeyDown]);
 
   const videoId = extractYouTubeId(videoUrl);
-  const embedUrl = videoId
-    ? `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`
-    : videoUrl;
+  let embedUrl = videoUrl;
+  if (videoId) {
+    if (videoId.startsWith("drive:")) {
+      embedUrl = `https://drive.google.com/file/d/${videoId.split(":")[1]}/preview`;
+    } else {
+      embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`;
+    }
+  }
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {

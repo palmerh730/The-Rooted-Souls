@@ -75,9 +75,9 @@ const MediaTeaser: FunctionComponent<MediaTeaserType> = ({
         View All Media →
       </button>
 
-      {activeVideo && activeVideo.video_url && (
+      {activeVideo && (activeVideo.video_url || activeVideo.article_url) && (
         <VideoModal
-          videoUrl={activeVideo.video_url}
+          videoUrl={activeVideo.video_url || activeVideo.article_url || ""}
           title={activeVideo.title}
           description={activeVideo.description}
           onClose={() => setActiveVideo(null)}
