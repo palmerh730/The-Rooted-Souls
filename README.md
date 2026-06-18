@@ -1,103 +1,100 @@
-# The Rooted Soul — Poetry Collection Landing Page
+# The Rooted Soul - Website
 
-A premium, fully responsive React & TypeScript landing page celebrating **"The Rooted Soul"**, a poetry and reflection collection by **Alan McDonald**. 
+This is the codebase for **The Rooted Soul** web platform, built with a modern React (Vite) frontend and a Node.js/Express backend. 
 
-This landing page leads visitors through a reflective narrative journey, matching the layout structure of the book itself. The project was initially structured using absolute coordinates and has been refactored into a modern, fluid, and highly interactive experience.
+It features a fully functional public gallery for displaying content, and a secured Admin Dashboard for uploading content directly to YouTube and storing metadata in Supabase.
 
----
-
-## 📖 About the Book
-> *"We often define ourselves by our struggles—but forget the strength it took to overcome them."*
-
-*The Rooted Soul* is an intimate, powerful collection of poems and reflections exploring mental struggle, healing, and the inner strength it takes to rise again. The website organizes this narrative through a series of sections:
-- **Hero Intro**: Cover mockup and primary purchase/sampling paths.
-- **The Quote**: Core philosophy and inspiration.
-- **Five Phases**: Chronological milestones representing *The Descent*, *The Echoes*, *The Turning Point*, *The Ascent*, and *The Awakening*.
-- **Author Bio**: Background on Alan McDonald's creative process.
-- **Reviews**: Testimonials and reader evaluations.
-- **Buy CTA**: Standard links to order the book (redirecting to an Amazon search fallback).
-- **Newsletter**: Subscription form for updates on new poems and reflections.
+## Tech Stack
+- **Frontend**: React, TypeScript, Vite, React Router
+- **Backend**: Node.js, Express, TypeScript, `tsx`
+- **Database**: Supabase (PostgreSQL)
+- **Video Storage**: Google YouTube Data API v3
+- **Deployment**: Split Architecture (Hostinger + Render)
 
 ---
 
-## 🛠️ Tech Stack & Architecture
-- **Framework**: [React 19](https://react.dev/)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Build Tool**: [Vite](https://vite.dev/)
-- **Styling**: Vanilla CSS Modules (maintaining scoped layouts and local visual variables)
-- **Icons**: Inline SVGs (avoiding extra heavy icon package dependencies)
+## 1. Local Development Setup
+
+To run this application locally on your computer, follow these steps:
+
+1. **Install Dependencies**
+   ```bash
+   npm install
+   ```
+
+2. **Environment Variables**
+   Create a `.env` file in the root directory containing the following:
+   ```env
+   # Backend Port
+   PORT=3001
+   
+   # Supabase Configuration
+   SUPABASE_URL=your_supabase_url
+   SUPABASE_SERVICE_KEY=your_supabase_service_key
+   
+   # Admin Authentication
+   ADMIN_EMAIL=your_chosen_admin_email
+   ADMIN_PASSWORD=your_chosen_admin_password
+   JWT_SECRET=any_long_random_string
+   
+   # YouTube API Integration
+   YOUTUBE_CLIENT_ID=your_google_client_id
+   YOUTUBE_CLIENT_SECRET=your_google_client_secret
+   YOUTUBE_REFRESH_TOKEN=your_oauth_refresh_token
+   
+   # Frontend API Endpoint (For Split Deployment)
+   # Leave blank for local development
+   VITE_API_URL=
+   ```
+
+3. **Start the Development Servers**
+   ```bash
+   npm run dev
+   ```
+   This command starts both the Vite frontend (Port 5173) and the Node.js backend (Port 3001) simultaneously.
 
 ---
 
-## ✨ Key Features & Responsive Refactoring
+## 2. Admin Dashboard & Uploading Media
 
-### 1. Fluid & Centered Layouts
-- Replaced rigid Figma/Locofy exports (`1905px` fixed widths, absolute positioning offsets, and hardcoded `5483px` overall heights) with a fully responsive layout.
-- Container elements dynamically adjust their width, bounds, and padding across all device viewports (desktop, tablet, and mobile).
+The Admin Dashboard is the control center for adding media to the website.
+Access it by navigating to `/admin/login` on the website.
 
-### 2. Five-Phases Grid
-- Refactored Card containers from nested layout groupings to direct flex siblings.
-- Designed a responsive CSS grid that aligns phases chronological-order side-by-side (`I`, `II`, `III`, `IV`, `V`) on desktop, wrapping to 2 columns on tablet, and stacking into a single column on mobile.
-- Removed outdated connector dividers to ensure a clean wrapping flow.
+### Categories
+Before uploading media, ensure you have created categories in the **Categories** tab (e.g., "Poem Recitations", "Radio Interviews"). These categories act as filters on the public website.
 
-### 3. Animated Scroll Indicator
-- Repositioned the scroll indicator ("Scroll v") to the bottom-center of the hero section.
-- Added a smooth, continuous bounce micro-animation (`@keyframes bounce`) to prompt scrolling.
-- Bound clicking the indicator to scroll down smoothly to the quote section.
-- Hidden on small mobile screens to keep layout focus clean.
+### Uploading a Video (Direct Upload)
+Because of the custom YouTube integration, you upload videos directly from the dashboard!
+1. Select **Video** as the Media Type.
+2. Select your video file (`.mp4` or `.mov`).
+3. Click Save. The video uploads to your private YouTube channel securely in the background. The status will say **Processing**. Once Google finishes processing, it will say **Ready**.
 
-### 4. Interactive Elements & Hover Physics
-- Relocated pointer click events from nested text containers directly to parent `<button>` tags, expanding active clicking surfaces.
-- Implemented premium, springy cubic-bezier transitions (`transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)`) for buttons, navigation hooks, and social links to lift and scale on hover.
-- Styled social media link containers into circular buttons featuring backdrop borders and hover glow fills.
+### Uploading Audio (Interviews & Podcasts)
+1. Select **Audio / Podcast**.
+2. Upload a Cover Image (Thumbnail).
+3. Paste the external link (e.g., Spotify, Google Drive). When visitors click this card, it opens the external audio link seamlessly.
 
-### 5. Semantic Elements & SEO Optimization
-- Configured newsletter subscription fields in a semantic `<form>` block to handle submission events.
-- Updated `index.html` with an optimized page title and detailed meta description.
-- Integrated direct SVG hyperlinks to Alan's Facebook and Instagram profiles.
-- Set the copyright year to 2026.
+### Uploading Articles
+1. Select **Article**.
+2. Paste the Article URL.
+3. Click "Auto-fill details" to scrape the title and description from the external news site!
+4. Upload a thumbnail (such as a screenshot of the article).
 
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-Make sure you have [Node.js](https://nodejs.org/) installed (minimum version 20 recommended).
-
-### 1. Install Dependencies
-Navigate to the project root directory in your terminal and run:
-```bash
-npm install
-```
-
-### 2. Start the Development Server
-Launch the Vite development server locally:
-```bash
-npm start
-```
-*The website will be available to preview in your browser at `http://localhost:5173`.*
-
-### 3. Compile and Build
-Validate typing and generate a production-ready static build bundle:
-```bash
-npm run build
-```
+### Publishing
+All newly uploaded media is saved as a **Draft**. Drafts are completely hidden from the public website. Once you verify the video works and the thumbnail looks correct, click **Publish** on the Dashboard to push it live!
 
 ---
 
-## 📂 Directory Layout
-```
-├── public/                 # Static assets (mockups, SVGs, etc.)
-├── src/
-│   ├── components/         # Section components (Nav, Hero, Phases, Reviews, Footer, etc.)
-│   │   ├── Nav.tsx & Nav.module.css
-│   │   ├── Footer.tsx & Footer.module.css
-│   │   └── ...
-│   ├── pages/              # Main page container (WDefault.tsx & WDefault.module.css)
-│   ├── global.css          # Design variables, typography imports, and utility styles
-│   ├── index.tsx           # Entry point rendering the React App
-│   └── vite-env.d.ts
-├── index.html              # HTML shell & SEO meta configuration
-├── tsconfig.json           # TS compiling configurations
-└── package.json            # Scripts and dependencies setup
-```
+## 3. Deployment (Split Architecture)
+
+This platform is configured for a **Split Deployment**:
+- The **Frontend** lives on Hostinger.
+- The **Backend** lives on Render.com.
+
+For full step-by-step instructions on setting this up, please read the `Render_Setup_Guide.md` file included in this repository.
+
+### Quick Deployment Checklist
+1. Deploy the `server/index.ts` code to Render.
+2. In your local `.env`, set `VITE_API_URL=https://your-render-app-url.onrender.com`.
+3. Run `npm run build` locally.
+4. Upload the contents of the `/build` folder directly into your Hostinger `public_html` directory.

@@ -5,6 +5,7 @@ import Section from "../components/Section";
 import Section1 from "../components/Section1";
 import PoemTeaser from "../components/PoemTeaser";
 import FrameComponent2 from "../components/FrameComponent2";
+import MediaSection from "../components/MediaSection";
 import FrameComponent3 from "../components/FrameComponent3";
 import Section2 from "../components/Section2";
 import CorporateEnquiries from "../components/CorporateEnquiries";
@@ -26,6 +27,7 @@ const WDefault: FunctionComponent = () => {
         <Section1 />
         <PoemTeaser />
         <FrameComponent2 />
+        <MediaSection />
         <FrameComponent3 />
         <Section2 />
         <CorporateEnquiries />

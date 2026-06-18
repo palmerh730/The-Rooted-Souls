@@ -34,6 +34,12 @@ body {
   --color-gray-500: rgba(26, 14, 0, 0.9);
   --color-white: #fff;
 
+  /* Admin Theme Map */
+  --color-gray-primary: var(--color-gray-300);
+  --color-gray-secondary: var(--color-gray-200);
+  --color-gray-darkest: var(--color-gray-100);
+  --color-gold-primary: var(--color-darkkhaki-100);
+
   /* Gap */
   --gap-1: 1px;
   --gap-11: 11px;

@@ -7,4 +7,10 @@ export default defineConfig({
     outDir: "build",
   },
   plugins: [react()],
+  server: {
+    proxy: {
+      '/api': 'http://localhost:3001',
+      '/uploads': 'http://localhost:3001'
+    }
+  }
 });

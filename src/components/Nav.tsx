@@ -1,4 +1,5 @@
 import { FunctionComponent, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./Nav.module.css";
 
 export type NavType = {
@@ -6,53 +7,47 @@ export type NavType = {
 };
 
 const Nav: FunctionComponent<NavType> = ({ className = "" }) => {
-  const onLinkTheClick = useCallback(() => {
-    const anchor = document.querySelector("[data-scroll-to='section2']");
-    if (anchor) {
-      anchor.scrollIntoView({ block: "start", behavior: "smooth" });
-    }
-  }, []);
+  const navigate = useNavigate();
 
-  const onLinkPoemsClick = useCallback(() => {
-    const anchor = document.querySelector("[data-scroll-to='teaserPoems']");
-    if (anchor) {
-      anchor.scrollIntoView({ block: "start", behavior: "smooth" });
+  const navigateToSection = useCallback((selector: string) => {
+    if (window.location.pathname !== '/') {
+      navigate("/");
+      setTimeout(() => {
+        const anchor = document.querySelector(selector);
+        if (anchor) anchor.scrollIntoView({ block: "start", behavior: "smooth" });
+      }, 100);
+    } else {
+      const anchor = document.querySelector(selector);
+      if (anchor) anchor.scrollIntoView({ block: "start", behavior: "smooth" });
     }
-  }, []);
+  }, [navigate]);
 
-  const onLinkAboutClick = useCallback(() => {
-    const anchor = document.querySelector(
-      "[data-scroll-to='sectionContainer']",
-    );
-    if (anchor) {
-      anchor.scrollIntoView({ block: "start", behavior: "smooth" });
-    }
-  }, []);
+  const onLinkTheClick = useCallback(() => navigateToSection("[data-scroll-to='section2']"), [navigateToSection]);
+  const onLinkPoemsClick = useCallback(() => navigateToSection("[data-scroll-to='teaserPoems']"), [navigateToSection]);
+  const onLinkAboutClick = useCallback(() => navigateToSection("[data-scroll-to='sectionContainer']"), [navigateToSection]);
+  const onLinkReviewsClick = useCallback(() => navigateToSection("[data-scroll-to='section1']"), [navigateToSection]);
+  const onLinkEnquiriesClick = useCallback(() => navigateToSection("[data-scroll-to='corporate']"), [navigateToSection]);
+  const onBuyNowTextClick = useCallback(() => navigateToSection("[data-scroll-to='section']"), [navigateToSection]);
 
-  const onLinkReviewsClick = useCallback(() => {
-    const anchor = document.querySelector("[data-scroll-to='section1']");
-    if (anchor) {
-      anchor.scrollIntoView({ block: "start", behavior: "smooth" });
-    }
-  }, []);
 
-  const onLinkEnquiriesClick = useCallback(() => {
-    const anchor = document.querySelector("[data-scroll-to='corporate']");
-    if (anchor) {
-      anchor.scrollIntoView({ block: "start", behavior: "smooth" });
-    }
-  }, []);
-
-  const onBuyNowTextClick = useCallback(() => {
-    const anchor = document.querySelector("[data-scroll-to='section']");
-    if (anchor) {
-      anchor.scrollIntoView({ block: "start", behavior: "smooth" });
-    }
-  }, []);
+  const onLinkMediaClick = useCallback(() => {
+    navigate("/media");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [navigate]);
 
   return (
     <header className={[styles.nav, className].join(" ")}>
-      <div className={styles.linkTheRootedSoulWrapper}>
+      <div 
+        className={styles.linkTheRootedSoulWrapper} 
+        style={{ cursor: "pointer" }}
+        onClick={() => {
+          if (window.location.pathname === '/') {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          } else {
+            navigate("/");
+          }
+        }}
+      >
         <div className={styles.linkThe}>The Rooted Soul</div>
       </div>
       <div className={styles.frameParent}>
@@ -63,6 +58,9 @@ const Nav: FunctionComponent<NavType> = ({ className = "" }) => {
             </div>
             <div className={styles.linkPoems} onClick={onLinkPoemsClick}>
               Poems
+            </div>
+            <div className={styles.linkMedia} onClick={onLinkMediaClick}>
+              Media
             </div>
             <div className={styles.linkAbout} onClick={onLinkAboutClick}>
               About

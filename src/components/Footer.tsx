@@ -1,4 +1,5 @@
 import { FunctionComponent, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./Footer.module.css";
 
 export type FooterType = {
@@ -6,55 +7,49 @@ export type FooterType = {
 };
 
 const Footer: FunctionComponent<FooterType> = ({ className = "" }) => {
-  const onLinkJourneyClick = useCallback(() => {
-    const anchor = document.querySelector("[data-scroll-to='section2']");
-    if (anchor) {
-      anchor.scrollIntoView({ block: "start", behavior: "smooth" });
-    }
-  }, []);
+  const navigate = useNavigate();
 
-  const onLinkPoemsClick = useCallback(() => {
-    const anchor = document.querySelector("[data-scroll-to='teaserPoems']");
-    if (anchor) {
-      anchor.scrollIntoView({ block: "start", behavior: "smooth" });
+  const navigateToSection = useCallback((selector: string) => {
+    if (window.location.pathname !== '/') {
+      navigate("/");
+      setTimeout(() => {
+        const anchor = document.querySelector(selector);
+        if (anchor) anchor.scrollIntoView({ block: "start", behavior: "smooth" });
+      }, 100);
+    } else {
+      const anchor = document.querySelector(selector);
+      if (anchor) anchor.scrollIntoView({ block: "start", behavior: "smooth" });
     }
-  }, []);
+  }, [navigate]);
 
-  const onLinkAboutClick = useCallback(() => {
-    const anchor = document.querySelector(
-      "[data-scroll-to='sectionContainer']",
-    );
-    if (anchor) {
-      anchor.scrollIntoView({ block: "start", behavior: "smooth" });
-    }
-  }, []);
+  const onLinkJourneyClick = useCallback(() => navigateToSection("[data-scroll-to='section2']"), [navigateToSection]);
+  const onLinkPoemsClick = useCallback(() => navigateToSection("[data-scroll-to='teaserPoems']"), [navigateToSection]);
+  const onLinkAboutClick = useCallback(() => navigateToSection("[data-scroll-to='sectionContainer']"), [navigateToSection]);
+  const onLinkReviewsClick = useCallback(() => navigateToSection("[data-scroll-to='section1']"), [navigateToSection]);
+  const onLinkEnquiriesClick = useCallback(() => navigateToSection("[data-scroll-to='corporate']"), [navigateToSection]);
+  const onLinkBuyClick = useCallback(() => navigateToSection("[data-scroll-to='section']"), [navigateToSection]);
 
-  const onLinkReviewsClick = useCallback(() => {
-    const anchor = document.querySelector("[data-scroll-to='section1']");
-    if (anchor) {
-      anchor.scrollIntoView({ block: "start", behavior: "smooth" });
-    }
-  }, []);
 
-  const onLinkEnquiriesClick = useCallback(() => {
-    const anchor = document.querySelector("[data-scroll-to='corporate']");
-    if (anchor) {
-      anchor.scrollIntoView({ block: "start", behavior: "smooth" });
-    }
-  }, []);
-
-  const onLinkBuyClick = useCallback(() => {
-    const anchor = document.querySelector("[data-scroll-to='section']");
-    if (anchor) {
-      anchor.scrollIntoView({ block: "start", behavior: "smooth" });
-    }
-  }, []);
+  const onLinkMediaClick = useCallback(() => {
+    navigate("/media");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [navigate]);
 
   return (
     <footer className={[styles.footer, className].join(" ")}>
       <div className={styles.footerContainer}>
         <div className={styles.brandSection}>
-          <i className={styles.theRootedSoul}>The Rooted Soul</i>
+          <i 
+            className={styles.theRootedSoul}
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              if (window.location.pathname === '/') {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              } else {
+                navigate("/");
+              }
+            }}
+          >The Rooted Soul</i>
           <div className={styles.aPoetryCollection}>
             A Poetry Collection by Alan McDonald · © 2026
           </div>
@@ -67,6 +62,9 @@ const Footer: FunctionComponent<FooterType> = ({ className = "" }) => {
             </div>
             <div className={styles.linkPoems} onClick={onLinkPoemsClick}>
               Poems
+            </div>
+            <div className={styles.linkMedia} onClick={onLinkMediaClick}>
+              Media
             </div>
             <div className={styles.linkAbout} onClick={onLinkAboutClick}>
               About
@@ -128,6 +126,12 @@ const Footer: FunctionComponent<FooterType> = ({ className = "" }) => {
               <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
             </svg>
           </a>
+          <button 
+            className={styles.adminButton}
+            onClick={() => navigate("/admin/login")}
+          >
+            Admin
+          </button>
         </div>
       </div>
     </footer>

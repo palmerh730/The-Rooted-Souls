@@ -59,6 +59,7 @@
 
 .linkThe2,
 .linkPoems,
+.linkMedia,
 .linkAbout,
 .linkReviews,
 .linkEnquiries {
@@ -73,6 +74,7 @@
 
 .linkThe2:hover,
 .linkPoems:hover,
+.linkMedia:hover,
 .linkAbout:hover,
 .linkReviews:hover,
 .linkEnquiries:hover {
