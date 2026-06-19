@@ -16,13 +16,16 @@ const AdminMediaForm: FunctionComponent = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
-  const [type, setType] = useState<"video" | "article" | "image">("video");
+  const [type, setType] = useState<"video" | "direct_video" | "article" | "image">("direct_video");
   const [mediaUrl, setMediaUrl] = useState("");
   const [source, setSource] = useState("");
   
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  
+  const [autoThumbnailFile, setAutoThumbnailFile] = useState<File | null>(null);
+  const [autoThumbnailUrl, setAutoThumbnailUrl] = useState<string>("");
   
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
@@ -60,7 +63,7 @@ const AdminMediaForm: FunctionComponent = () => {
         setTitle(data.title || "");
         setDescription(data.description || "");
         setCategory(data.category_id?.toString() || "");
-        setType(data.media_type || "video");
+        setType(data.media_type === "video" ? (data.video_url?.includes("supabase.co") ? "direct_video" : "video") : data.media_type || "video");
         setMediaUrl(data.media_type === "video" ? (data.video_url || "") : (data.article_url || ""));
         setSource(data.article_source || "");
       }
@@ -69,8 +72,44 @@ const AdminMediaForm: FunctionComponent = () => {
     }
   };
 
+  const generateVideoThumbnail = (file: File) => {
+    const video = document.createElement("video");
+    video.preload = "metadata";
+    video.playsInline = true;
+    video.muted = true;
+    
+    video.onloadeddata = () => {
+      // Seek to 1.5s or 25% of the duration if shorter
+      video.currentTime = Math.min(1.5, video.duration * 0.25);
+    };
+
+    video.onseeked = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const thumbFile = new File([blob], `auto-thumb-${Date.now()}.jpg`, { type: "image/jpeg" });
+            setAutoThumbnailFile(thumbFile);
+            setAutoThumbnailUrl(URL.createObjectURL(blob));
+          }
+        }, "image/jpeg", 0.85);
+      }
+      URL.revokeObjectURL(video.src); // Cleanup
+    };
+
+    video.src = URL.createObjectURL(file);
+  };
+
   const handleVideoChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) setVideoFile(e.target.files[0]);
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setVideoFile(file);
+      generateVideoThumbnail(file);
+    }
   };
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -186,13 +225,14 @@ const AdminMediaForm: FunctionComponent = () => {
         finalThumbnailPath = publicUrl;
       }
 
-      // --- 2. UPLOAD THUMBNAIL (if custom thumbnail provided) ---
-      if (thumbnailFile && type !== "image") {
-        const fileExt = thumbnailFile.name.split('.').pop();
+      // --- 2. UPLOAD THUMBNAIL (if custom or auto provided) ---
+      const fileToUpload = thumbnailFile || autoThumbnailFile;
+      if (fileToUpload && type !== "image") {
+        const fileExt = fileToUpload.name.split('.').pop();
         const fileName = `${Math.random()}.${fileExt}`;
         const { data: uploadData, error: uploadError } = await supabase.storage
           .from('media')
-          .upload(`thumbnails/${fileName}`, thumbnailFile);
+          .upload(`thumbnails/${fileName}`, fileToUpload);
           
         if (uploadError) throw new Error("Thumbnail upload failed: " + uploadError.message);
         
@@ -215,6 +255,23 @@ const AdminMediaForm: FunctionComponent = () => {
         }
       }
 
+      // --- 3b. UPLOAD DIRECT VIDEO ---
+      if (type === "direct_video" && videoFile && !isEdit) {
+        const fileExt = videoFile.name.split('.').pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('media')
+          .upload(`videos/${fileName}`, videoFile);
+          
+        if (uploadError) throw new Error("Video upload failed: " + uploadError.message);
+        
+        const { data: { publicUrl } } = supabase.storage
+          .from('media')
+          .getPublicUrl(uploadData.path);
+          
+        finalMediaUrl = publicUrl;
+      }
+
       // Fallback for auto-fetching YT thumbnail if just editing/pasting a link manually
       if (!finalThumbnailPath && type === "video" && finalMediaUrl.includes("youtu")) {
         const videoIdMatch = finalMediaUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
@@ -228,11 +285,11 @@ const AdminMediaForm: FunctionComponent = () => {
         title,
         description,
         category_id: category ? parseInt(category) : null,
-        media_type: type,
+        media_type: type === "direct_video" ? "video" : type,
         published: true
       };
 
-      if (type === "video") {
+      if (type === "video" || type === "direct_video") {
         mediaData.video_url = finalMediaUrl;
       } else if (type === "article") {
         mediaData.article_url = finalMediaUrl;
@@ -321,11 +378,14 @@ const AdminMediaForm: FunctionComponent = () => {
               <label className={styles.label}>Type</label>
               <select
                 value={type}
-                onChange={(e) => setType(e.target.value as "video" | "article" | "image")}
+                onChange={(e) => setType(e.target.value as any)}
                 className={styles.input}
                 disabled={isEdit}
               >
-                <option value="video">YouTube Video</option>
+                {isEdit && type === "video" && (
+                  <option value="video">YouTube Video (Legacy)</option>
+                )}
+                <option value="direct_video">Video</option>
                 <option value="article">Article / External Link</option>
                 <option value="image">Image / Screenshot</option>
               </select>
@@ -366,7 +426,7 @@ const AdminMediaForm: FunctionComponent = () => {
               />
             </div>
 
-            {type === "video" ? (
+            {type === "video" || type === "direct_video" ? (
               <div className={styles.formGroup}>
                 <label className={styles.label}>Video File (MP4, MOV)</label>
                 {!isEdit ? (
@@ -379,8 +439,14 @@ const AdminMediaForm: FunctionComponent = () => {
                       required
                     />
                     <p style={{fontSize: '12px', color: '#888', marginTop: '4px'}}>
-                      Video will be uploaded directly to your YouTube channel. A Google Login popup will appear when you click save.
+                      {type === "video" ? "Video will be uploaded directly to your YouTube channel. A Google Login popup will appear when you click save." : "Video will be uploaded directly to your database. Limit 50MB per file."}
                     </p>
+                    {autoThumbnailUrl && !thumbnailFile && (
+                      <div style={{ marginTop: '10px' }}>
+                        <p style={{ fontSize: '14px', color: 'var(--color-burlywood-400)', marginBottom: '4px' }}>Auto-generated Thumbnail:</p>
+                        <img src={autoThumbnailUrl} alt="Preview" style={{ width: '200px', borderRadius: '8px', border: '1px solid var(--color-darkkhaki-500)' }} />
+                      </div>
+                    )}
                   </>
                 ) : (
                   <p style={{color: '#c9a84c', fontSize: '14px'}}>Video file cannot be changed after initial upload.</p>

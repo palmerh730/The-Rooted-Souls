@@ -42,6 +42,16 @@
   border: none;
 }
 
+.nativeVideo {
+  max-width: 100%;
+  max-height: 80vh;
+  border-radius: 12px;
+  outline: none;
+  border: 1px solid var(--color-darkkhaki-500);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+  background-color: #000;
+}
+
 .info {
   text-align: center;
   max-width: 700px;

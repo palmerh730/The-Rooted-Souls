@@ -59,6 +59,8 @@ const VideoModal: FunctionComponent<VideoModalType> = ({
     }
   }
 
+  const isNativeVideo = videoUrl.includes(".supabase.co") || videoUrl.endsWith(".mp4") || videoUrl.endsWith(".mov");
+
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       onClose();
@@ -71,15 +73,25 @@ const VideoModal: FunctionComponent<VideoModalType> = ({
         ×
       </button>
       <div className={styles.container}>
-        <div className={styles.videoWrapper}>
-          <iframe
-            className={styles.iframe}
-            src={embedUrl}
-            title={title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
+        {isNativeVideo ? (
+          <video
+            className={styles.nativeVideo}
+            src={videoUrl}
+            controls
+            autoPlay
+            playsInline
           />
-        </div>
+        ) : (
+          <div className={styles.videoWrapper}>
+            <iframe
+              className={styles.iframe}
+              src={embedUrl}
+              title={title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        )}
         <div className={styles.info}>
           <h3 className={styles.title}>{title}</h3>
           {description && (

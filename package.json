@@ -52,14 +52,10 @@
   "name": "alan_macdonald_-_web_mock__copy_",
   "private": true,
   "scripts": {
+    "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "start": "vite",
-    "start:prod": "npx tsx server/index.ts",
-    "server": "npx tsx server/index.ts",
-    "dev": "npx concurrently \"npm run start\" \"npm run server\"",
-    "seed": "npx tsx server/seed.ts"
+    "preview": "vite preview"
   },
   "version": "0.1.0"
 }
