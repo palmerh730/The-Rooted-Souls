@@ -55,7 +55,7 @@ const VideoModal: FunctionComponent<VideoModalType> = ({
     if (videoId.startsWith("drive:")) {
       embedUrl = `https://drive.google.com/file/d/${videoId.split(":")[1]}/preview`;
     } else {
-      embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`;
+      embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
     }
   }
 
