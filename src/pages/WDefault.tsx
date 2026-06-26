@@ -1,6 +1,7 @@
 import { FunctionComponent } from "react";
 import Nav from "../components/Nav";
 import FrameComponent1 from "../components/FrameComponent1";
+import AsSeenOn from "../components/AsSeenOn";
 import Section from "../components/Section";
 import Section1 from "../components/Section1";
 import PoemTeaser from "../components/PoemTeaser";
@@ -23,6 +24,7 @@ const WDefault: FunctionComponent = () => {
           <Nav />
           <FrameComponent1 />
         </main>
+        <AsSeenOn />
         <Section />
         <Section1 />
         <PoemTeaser />
